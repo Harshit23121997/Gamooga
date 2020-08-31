@@ -34,7 +34,7 @@ app.prepare().then(() => {
               ],
             afterAuth(ctx) {
                 const { shop, accessToken } = ctx.session;
-                ctx.cookies.set('shopOrigin', shop, {
+                ctx.cookies.set('shopOrigin', 'https://plumgoodness-2.myshopify.com', {
                     httpOnly: false,
                     secure: false,
                     sameSite: 'none'
