@@ -6,6 +6,8 @@ const next = require('next');
 const { default: createShopifyAuth } = require('@shopify/koa-shopify-auth');
 const { verifyRequest } = require('@shopify/koa-shopify-auth');
 const session = require('koa-session');
+const serve = require('koa-static');
+
 
 dotenv.config();
 const { default: graphQLProxy } = require('@shopify/koa-shopify-graphql-proxy');
@@ -20,6 +22,7 @@ const { SHOPIFY_API_SECRET_KEY, SHOPIFY_API_KEY } = process.env;
 
 app.prepare().then(() => {
     const server = new Koa();
+    server.use(serve('./public'));
     server.use(session({ secure: true, sameSite: 'none' }, server));
     server.keys = [SHOPIFY_API_SECRET_KEY];
 
@@ -33,8 +36,8 @@ app.prepare().then(() => {
                 'write_script_tags'
               ],
             afterAuth(ctx) {
-                const { shop,accessToken } = ctx.session;
-                ctx.cookies.set('shopOrigin', 'plumgoodness-2', {
+                const { shop, accessToken } = ctx.session;
+                ctx.cookies.set('shopOrigin', shop, {
                     httpOnly: false,
                     secure: false,
                     sameSite: 'none'
